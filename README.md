@@ -1,4 +1,4 @@
-java mini project
+Java Mini Project
 
 
-tic tac toe game using Java
+Tic Tac Toe Game Using Java
