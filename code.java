@@ -12,28 +12,28 @@ public class tictactoe {
 			String line = null;
 			switch (a) {
 			case 0:
-				line = board[0] + board[1] + board[2];
+				line = pos[0] + pos[1] + pos[2];
 				break;
 			case 1:
-				line = board[3] + board[4] + board[5];
+				line = pos[3] + pos[4] + pos[5];
 				break;
 			case 2:
-				line = board[6] + board[7] + board[8];
+				line = pos[6] + pos[7] + pos[8];
 				break;
 			case 3:
-				line = board[0] + board[3] + board[6];
+				line = pos[0] + pos[3] + pos[6];
 				break;
 			case 4:
-				line = board[1] + board[4] + board[7];
+				line = pos[1] + pos[4] + pos[7];
 				break;
 			case 5:
-				line = board[2] + board[5] + board[8];
+				line = pos[2] + pos[5] + pos[8];
 				break;
 			case 6:
-				line = board[0] + board[4] + board[8];
+				line = pos[0] + pos[4] + pos[8];
 				break;
 			case 7:
-				line = board[2] + board[4] + board[6];
+				line = pos[2] + pos[4] + pos[6];
 				break;
 			}
 			if (line.equals("XXX")) {
@@ -44,7 +44,7 @@ public class tictactoe {
 			}
 		}
 		for (int a = 0; a < 9; a++) {
-			if (Arrays.asList(board).contains(
+			if (Arrays.asList(pos).contains(
 					String.valueOf(a + 1))) {
 				break;
 			}
@@ -54,70 +54,64 @@ public class tictactoe {
 		}
 
 		System.out.println(
-			turn + "'s turn; enter a slot number to place "
-			+ turn + " in:");
+			turn + " Enter the Position :");
 		return null;
 	}
 	
 
-	static void printBoard()
+	static void printpos()
 	{
-		System.out.println("| " + board[0] + " | "
-						+ board[1] + " | " + board[2]
-						+ " |");
-		System.out.println("|-----------|");
-		System.out.println("| " + board[3] + " | "
-						+ board[4] + " | " + board[5]
-						+ " |");
-		System.out.println("|-----------|");
-		System.out.println("| " + board[6] + " | "
-						+ board[7] + " | " + board[8]
-						+ " |");
+		System.out.println("| " + pos[0] + " | "
+						+ pos[1] + " | " + pos[2]
+						+ " |"+ '\n' );
+
+		System.out.println("| " + pos[3] + " | "
+						+ pos[4] + " | " + pos[5]
+						+ " |"+ '\n' );
+		System.out.println("| " + pos[6] + " | "
+						+ pos[7] + " | " + pos[8]
+						+ " |"+ '\n' );
 	}
 
 	public static void main(String[] args)
 	{
 		Scanner in = new Scanner(System.in);
-		board = new String[9];
+		pos = new String[9];
 		turn = "X";
 		String winner = null;
 
 		for (int a = 0; a < 9; a++) {
-			board[a] = String.valueOf(a + 1);
+			pos[a] = String.valueOf(a + 1);
 		}
 
-		System.out.println("Welcome to 3x3 Tic Tac Toe.");
-		printBoard();
+		System.out.println(" Tic Tac Toe by adwaith "+  '\n' );
+		printpos();
 
 		System.out.println(
-			"X will play first. Enter a slot number to place X in:");
+			"X Enter the Position :");
 
 		while (winner == null) {
 			int numInput;
 		
-		// Exception handling.
-		// numInput will take input from user like from 1 to 9.
-		// If it is not in range from 1 to 9.
-		// then it will show you an error "Invalid input."
+	
 			try {
 				numInput = in.nextInt();
 				if (!(numInput > 0 && numInput <= 9)) {
 					System.out.println(
-						"Invalid input; re-enter slot number:");
+						"Invalid input; re-enter position:");
 					continue;
 				}
 			}
 			catch (InputMismatchException e) {
 				System.out.println(
-					"Invalid input; re-enter slot number:");
+					"Invalid input; re-enter positionr:");
 				continue;
 			}
 			
-			// This game has two player x and O.
-			// Here is the logic to decide the turn.
-			if (board[numInput - 1].equals(
+
+			if (pos[numInput - 1].equals(
 					String.valueOf(numInput))) {
-				board[numInput - 1] = turn;
+				pos[numInput - 1] = turn;
 
 				if (turn.equals("X")) {
 					turn = "O";
@@ -126,27 +120,23 @@ public class tictactoe {
 					turn = "X";
 				}
 
-				printBoard();
-				winner = checkWinner();
+				printpos();
+				winner = Winner();
 			}
 			else {
 				System.out.println(
-					"Slot already taken; re-enter slot number:");
+					"position already taken; re-enter position:");
 			}
 		}
 	
-		// If no one win or lose from both player x and O.
-		// then here is the logic to print "draw".
 		if (winner.equalsIgnoreCase("draw")) {
 			System.out.println(
-				"It's a draw! Thanks for playing.");
+				" noobs , its a DRAW");
 		}
-	
-		// For winner -to display Congratulations! message.
 		else {
 			System.out.println(
 				"Congratulations! " + winner
-				+ "'s have won! Thanks for playing.");
+				+ "'s have won!");
 		}
 	in.close();
 	}
