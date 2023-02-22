@@ -1,143 +1,99 @@
-import java.util.*;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
-public class tictactoe {
+public class TicTacToeGUI extends JFrame implements ActionListener {
+    private JButton[][] buttons;
+    private char[][] board;
+    private char currentPlayer;
+    private JLabel statusLabel;
 
-	static String[] pos;
-	static String turn;
+    public TicTacToeGUI() {
+        setTitle("Tic Tac Toe");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(300, 300);
+        setLayout(new GridLayout(4, 3));
 
+        buttons = new JButton[3][3];
+        board = new char[3][3];
+        currentPlayer = 'X';
 
-	static String Winner()
-	{
-		for (int a = 0; a < 8; a++) {
-			String line = null;
-			switch (a) {
-			case 0:
-				line = pos[0] + pos[1] + pos[2];
-				break;
-			case 1:
-				line = pos[3] + pos[4] + pos[5];
-				break;
-			case 2:
-				line = pos[6] + pos[7] + pos[8];
-				break;
-			case 3:
-				line = pos[0] + pos[3] + pos[6];
-				break;
-			case 4:
-				line = pos[1] + pos[4] + pos[7];
-				break;
-			case 5:
-				line = pos[2] + pos[5] + pos[8];
-				break;
-			case 6:
-				line = pos[0] + pos[4] + pos[8];
-				break;
-			case 7:
-				line = pos[2] + pos[4] + pos[6];
-				break;
-			}
-			if (line.equals("XXX")) {
-				return "X";
-			}
-			else if (line.equals("OOO")) {
-				return "O";
-			}
-		}
-		for (int a = 0; a < 9; a++) {
-			if (Arrays.asList(pos).contains(
-					String.valueOf(a + 1))) {
-				break;
-			}
-			else if (a == 8) {
-				return "draw";
-			}
-		}
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 3; col++) {
+                buttons[row][col] = new JButton();
+                buttons[row][col].addActionListener(this);
+                add(buttons[row][col]);
+            }
+        }
 
-		System.out.println(
-			turn + " Enter the Position :");
-		return null;
-	}
-	
+        statusLabel = new JLabel("Player " + currentPlayer + "'s turn");
+        add(statusLabel);
 
-	static void printpos()
-	{
-		System.out.println("| " + pos[0] + " | "
-						+ pos[1] + " | " + pos[2]
-						+ " |"+ '\n' );
+        setVisible(true);
+    }
 
-		System.out.println("| " + pos[3] + " | "
-						+ pos[4] + " | " + pos[5]
-						+ " |"+ '\n' );
-		System.out.println("| " + pos[6] + " | "
-						+ pos[7] + " | " + pos[8]
-						+ " |"+ '\n' );
-	}
+    public void actionPerformed(ActionEvent e) {
+        JButton button = (JButton) e.getSource();
 
-	public static void main(String[] args)
-	{
-		Scanner in = new Scanner(System.in);
-		pos = new String[9];
-		turn = "X";
-		String winner = null;
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 3; col++) {
+                if (button == buttons[row][col]) {
+                    if (board[row][col] == 0) {
+                        board[row][col] = currentPlayer;
+                        button.setText("" + currentPlayer);
 
-		for (int a = 0; a < 9; a++) {
-			pos[a] = String.valueOf(a + 1);
-		}
+                        if (isWinningMove(row, col)) {
+                            JOptionPane.showMessageDialog(this, "Player " + currentPlayer + " wins!");
+                            resetGame();
+                            return;
+                        }
 
-		System.out.println(" Tic Tac Toe by adwaith "+  '\n' );
-		printpos();
+                        if (isBoardFull()) {
+                            JOptionPane.showMessageDialog(this, "It's a tie!");
+                            resetGame();
+                            return;
+                        }
 
-		System.out.println(
-			"X Enter the Position :");
+                        currentPlayer = currentPlayer == 'X' ? 'O' : 'X';
+                        statusLabel.setText("Player " + currentPlayer + "'s turn");
+                    }
+                }
+            }
+        }
+    }
 
-		while (winner == null) {
-			int numInput;
-		
-	
-			try {
-				numInput = in.nextInt();
-				if (!(numInput > 0 && numInput <= 9)) {
-					System.out.println(
-						"Invalid input; re-enter position:");
-					continue;
-				}
-			}
-			catch (InputMismatchException e) {
-				System.out.println(
-					"Invalid input; re-enter positionr:");
-				continue;
-			}
-			
+    private boolean isWinningMove(int row, int col) {
+        return (board[row][0] == currentPlayer && board[row][1] == currentPlayer && board[row][2] == currentPlayer) ||
+                (board[0][col] == currentPlayer && board[1][col] == currentPlayer && board[2][col] == currentPlayer) ||
+                (board[0][0] == currentPlayer && board[1][1] == currentPlayer && board[2][2] == currentPlayer) ||
+                (board[2][0] == currentPlayer && board[1][1] == currentPlayer && board[0][2] == currentPlayer);
+    }
 
-			if (pos[numInput - 1].equals(
-					String.valueOf(numInput))) {
-				pos[numInput - 1] = turn;
+    private boolean isBoardFull() {
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 3; col++) {
+                if (board[row][col] == 0) {
+                    return false;
+                }
+            }
+        }
 
-				if (turn.equals("X")) {
-					turn = "O";
-				}
-				else {
-					turn = "X";
-				}
+        return true;
+    }
 
-				printpos();
-				winner = Winner();
-			}
-			else {
-				System.out.println(
-					"position already taken; re-enter position:");
-			}
-		}
-	
-		if (winner.equalsIgnoreCase("draw")) {
-			System.out.println(
-				" noobs , its a DRAW");
-		}
-		else {
-			System.out.println(
-				"Congratulations! " + winner
-				+ "'s have won!");
-		}
-	in.close();
-	}
+    private void resetGame() {
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 3; col++) {
+                buttons[row][col].setText("");
+                board[row][col] = 0;
+            }
+        }
+
+        currentPlayer = 'X';
+        statusLabel.setText("Player " + currentPlayer + "'s turn");
+    }
+
+    public static void main(String[] args) {
+        new TicTacToeGUI();
+    }
 }
